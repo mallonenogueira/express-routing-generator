@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { InjectionToken } from "tsyringe";
 
 export type Methods = "get" | "post";
 
@@ -22,5 +23,11 @@ export interface IRoute {
 
 export interface IController {
   [index: string]: any;
-  new (): any;
+  new (...params: any[]): any;
+}
+
+export interface IInject {
+  index: number;
+  value: InjectionToken<any>;
+  propertyKey: string;
 }

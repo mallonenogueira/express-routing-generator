@@ -1,4 +1,5 @@
-import { Handlers, Methods, IRequest, IRoute } from "./types";
+import { InjectionToken } from "tsyringe";
+import { Handlers, Methods, IRequest, IRoute, IInject } from "./types";
 
 function Method(method: Methods, path: string, ...handlers: Handlers[]) {
   return function (
@@ -33,5 +34,16 @@ export function Route(path: string, ...handlers: Handlers[]): ClassDecorator {
     };
 
     Reflect.defineMetadata("route", data, target.prototype);
+  };
+}
+
+export function inject(value: InjectionToken<any>): any {
+  return function (target: Object, key: string, index: number) {
+    Reflect.defineMetadata(
+      `inject:${key}:${index}`,
+      { index, value, propertyKey: key } as IInject,
+      target,
+      key
+    );
   };
 }
