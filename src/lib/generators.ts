@@ -1,5 +1,4 @@
-import { getControllers } from "./getters";
-import { Handlers, Methods, IMethodData, IRouteData } from "./types";
+import { Handlers, Methods, IRequest, IRoute } from "./types";
 
 function Method(method: Methods, path: string, ...handlers: Handlers[]) {
   return function (
@@ -7,7 +6,7 @@ function Method(method: Methods, path: string, ...handlers: Handlers[]) {
     _propertyName: string,
     _descriptor: PropertyDescriptor
   ) {
-    const data: IMethodData = {
+    const data: IRequest = {
       method,
       path,
       property: _propertyName,
@@ -28,19 +27,11 @@ export function Post(path: string, ...handlers: Handlers[]) {
 
 export function Route(path: string, ...handlers: Handlers[]): ClassDecorator {
   return (target) => {
-    const data: IRouteData = {
+    const data: IRoute = {
       path,
       handlers,
     };
 
     Reflect.defineMetadata("route", data, target.prototype);
-
-    const controllers = getControllers();
-
-    if (!controllers) {
-      Reflect.defineMetadata("controllers", [target], Route.prototype);
-    } else {
-      controllers.push(target);
-    }
   };
 }

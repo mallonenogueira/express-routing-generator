@@ -1,42 +1,58 @@
 import { Router } from "express";
-import {
-  getControllers,
-  getMethodMetadatas,
-  getRouteMetadata,
-} from "./getters";
-import { IController, IMethodData } from "./types";
+import { getMethodMetadatas, getRouteMetadata } from "./getters";
+import { createController } from "./handlers/create-controller";
+import { addToControllerRouter } from "./handlers/add-to-controller-router";
+import { addToParentRouter } from "./handlers/add-to-parent-router";
+import { IController, IRequest as IRequest } from "./types";
 
-function getControllerInstance(target: Function): IController {
-  const controller = target as IController;
-
-  return new controller();
-}
-
-function createInternalRouter(
-  metadatas: IMethodData[],
-  controller: IController
+function createControllerRouter(
+  metadatas: IRequest[],
+  controller: IController,
+  addToController: typeof addToControllerRouter
 ) {
   return metadatas.reduce((router, data) => {
-    return router[data.method](
-      data.path,
-      ...data.handlers,
-      controller[data.property].bind(controller)
-    );
+    addToController(router, controller, data);
+
+    return router;
   }, Router());
 }
 
-export function createRoutes(controllers = getControllers()) {
-  const appRoute = Router();
+type Params = {
+  controllers?: IController[];
+  addToParentRouter?: typeof addToParentRouter;
+  addToControllerRouter?: typeof addToControllerRouter;
+  createController?: typeof createController;
+};
+
+const defaultParams = {
+  controllers: [],
+  addToParentRouter,
+  addToControllerRouter,
+  createController,
+};
+
+export function createRoutes(params: Params = {}) {
+  const appRouter = Router();
+  const {
+    controllers,
+    addToParentRouter,
+    addToControllerRouter,
+    createController,
+  } = { ...defaultParams, ...params };
 
   controllers.forEach((target) => {
     const metadatas = getMethodMetadatas(target);
-    const controller = getControllerInstance(target);
-    const { path, handlers } = getRouteMetadata(target);
+    const controller = createController(target);
+    const route = getRouteMetadata(target);
 
-    const router = createInternalRouter(metadatas, controller);
+    const controllerRouter = createControllerRouter(
+      metadatas,
+      controller,
+      addToControllerRouter
+    );
 
-    appRoute.use(path, ...handlers, router);
+    addToParentRouter(appRouter, controllerRouter, route);
   });
 
-  return appRoute;
+  return appRouter;
 }

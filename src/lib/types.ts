@@ -8,14 +8,14 @@ export type Handlers = <T>(
   next: NextFunction
 ) => T | void;
 
-export interface IMethodData {
+export interface IRequest {
   method: Methods;
   path: string;
   property: string;
   handlers: Handlers[];
 }
 
-export interface IRouteData {
+export interface IRoute {
   path: string;
   handlers: Handlers[];
 }
