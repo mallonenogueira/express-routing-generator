@@ -26,5 +26,5 @@ export class UserController {
 import { createRoutes } from "./lib";
 import { UserController } from "./user-controller";
 
-app.use(createRoutes([UserController]));
+app.use(createRoutes({ controllers: [UserController] }));
 ```
