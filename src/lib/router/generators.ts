@@ -1,12 +1,4 @@
-import {
-  Handlers,
-  Methods,
-  IRequest,
-  IRoute,
-  IInject,
-  InjectEnum,
-  InjectionToken,
-} from "./types";
+import { Handlers, Methods, IRequest, IRoute } from "..";
 
 function Method(method: Methods, path: string, ...handlers: Handlers[]) {
   return function (
@@ -43,25 +35,3 @@ export function Route(path: string, ...handlers: Handlers[]): ClassDecorator {
     Reflect.defineMetadata("route", data, target.prototype);
   };
 }
-
-export function inject(value: InjectionToken): any {
-  return function (target: Object, key: string, index: number) {
-    Reflect.defineMetadata(
-      `inject:${index}`,
-      { index, value, propertyKey: key } as IInject,
-      target,
-      key
-    );
-  };
-}
-
-export const Req = inject(InjectEnum.REQUEST);
-
-export const Res = inject(InjectEnum.RESPONSE);
-
-export const Next = inject(InjectEnum.NEXT);
-
-export const Param = (param: string) =>
-  inject(`${InjectEnum.REQUEST_PARAM}params:${param}`);
-
-export const Body = inject(`${InjectEnum.REQUEST_PARAM}body`);

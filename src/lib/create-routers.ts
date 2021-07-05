@@ -1,9 +1,21 @@
 import { Router } from "express";
-import { getMethodMetadatas, getRouteMetadata } from "./getters";
-import { createController } from "./handlers/create-controller";
-import { addToControllerRouter } from "./handlers/add-to-controller-router";
-import { addToParentRouter } from "./handlers/add-to-parent-router";
-import { IController, IRequest as IRequest } from "./types";
+
+import { createController } from "./create-controller";
+import { addToControllerRouter } from "./add-to-controller-router";
+import { addToParentRouter } from "./add-to-parent-router";
+import { IController, IRequest, IRoute } from ".";
+
+function getMethodMetadatas(target: Function) {
+  return Reflect.getMetadataKeys(target.prototype)
+    .filter((key: string) => key.startsWith("method:"))
+    .map(
+      (key: string) => Reflect.getMetadata(key, target.prototype) as IRequest
+    );
+}
+
+function getRouteMetadata(target: Function): IRoute {
+  return Reflect.getMetadata("route", target.prototype) as IRoute;
+}
 
 function createControllerRouter(
   metadatas: IRequest[],

@@ -15,7 +15,7 @@ export class DIController {
   }
 
   @Get("/test-inject-string")
-  inject(@Res res: Response, @inject("user") user: any) {
+  inject(@Res res: Response, @inject("meme") user: any) {
     res.json(user);
   }
 

@@ -1,5 +1,7 @@
 import { NextFunction, Router, Request, Response } from "express";
-import { IController, IRequest, IInject, InjectEnum } from "../types";
+import { IController } from "../../types";
+import { IRequest } from "../../router/types";
+import { IInject, InjectEnum } from "../types";
 
 type HandleContainer = (req: Request, res: Response, value: any) => any;
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { IController, IRequest } from "../types";
+import { IController, IRequest } from ".";
 
 export function addToControllerRouter(
   router: Router,
