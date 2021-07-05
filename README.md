@@ -38,9 +38,8 @@ example using dependency injection and decorator routes
 
 import { Response } from "express";
 import { injectable } from "tsyringe";
-import { Get, inject, Route } from "./lib";
+import { Get, inject, Route, Res } from "./lib";
 
-@injectable()
 class Service {
   getData() {
     return [{ name: "dependencyInjection" }];
@@ -48,12 +47,11 @@ class Service {
 }
 
 @Route("/di")
-@injectable()
 export class DIController {
   @Get("/")
   findOne(
-    @inject("Response") res: Response,
-    @inject(Service) service: Service
+    @Res res: Response,
+    service: Service
   ) {
     res.json(service.getData());
   }
