@@ -8,7 +8,7 @@ export function addToControllerRouter(
 ) {
   router[request.method](
     request.path,
-    ...request.handlers,
+    ...request.middlewares,
     controller[request.property].bind(controller)
   );
 }

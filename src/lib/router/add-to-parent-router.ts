@@ -6,5 +6,5 @@ export function addToParentRouter(
   controllerRouter: Router,
   parentData: IRoute
 ) {
-  appRoute.use(parentData.path, ...parentData.handlers, controllerRouter);
+  appRoute.use(parentData.path, ...parentData.middlewares, controllerRouter);
 }

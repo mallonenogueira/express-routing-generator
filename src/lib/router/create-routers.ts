@@ -1,9 +1,9 @@
 import { Router } from "express";
 
-import { createController } from "./create-controller";
+import { resolveController } from "./resolve-controller";
 import { addToControllerRouter } from "./add-to-controller-router";
 import { addToParentRouter } from "./add-to-parent-router";
-import { IController, IRequest, IRoute } from ".";
+import { CreateRoutesParams, IController, IRequest, IRoute } from "..";
 
 function getMethodMetadatas(target: Function) {
   return Reflect.getMetadataKeys(target.prototype)
@@ -29,33 +29,25 @@ function createControllerRouter(
   }, Router());
 }
 
-type Params = {
-  controllers?: IController[];
-  addToParentRouter?: typeof addToParentRouter;
-  addToControllerRouter?: typeof addToControllerRouter;
-  createController?: typeof createController;
-};
-
 const defaultParams = {
-  controllers: [],
   addToParentRouter,
   addToControllerRouter,
-  createController,
+  resolveController,
 };
 
-export function createRoutes(params: Params = {}) {
+export function createRoutes(params: CreateRoutesParams = {}) {
   const appRouter = Router();
   const {
     controllers,
     addToParentRouter,
     addToControllerRouter,
-    createController,
+    resolveController,
   } = { ...defaultParams, ...params };
 
-  controllers.forEach((target) => {
+  controllers?.forEach((target) => {
     const metadatas = getMethodMetadatas(target);
-    const controller = createController(target);
     const route = getRouteMetadata(target);
+    const controller = resolveController(target);
 
     const controllerRouter = createControllerRouter(
       metadatas,

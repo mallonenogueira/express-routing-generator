@@ -1,8 +1,16 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Router, Request, Response } from "express";
 
-export type Methods = "get" | "post";
+export type Methods =
+  | "all"
+  | "get"
+  | "post"
+  | "put"
+  | "delete"
+  | "patch"
+  | "options"
+  | "head";
 
-export type Handlers = <T>(
+export type Middleware = <T>(
   req: Request,
   res: Response,
   next: NextFunction
@@ -12,10 +20,30 @@ export interface IRequest {
   method: Methods;
   path: string;
   property: string;
-  handlers: Handlers[];
+  middlewares: Middleware[];
 }
 
 export interface IRoute {
   path: string;
-  handlers: Handlers[];
+  middlewares: Middleware[];
 }
+
+export interface IController {
+  [index: string]: any;
+  new (...params: any[]): any;
+}
+
+export type CreateRoutesParams = {
+  controllers?: IController[];
+  addToParentRouter?: (
+    appRoute: Router,
+    controllerRouter: Router,
+    parentData: IRoute
+  ) => void;
+  addToControllerRouter?: (
+    router: Router,
+    controller: IController,
+    request: IRequest
+  ) => void;
+  resolveController?: (target: Function) => IController;
+};

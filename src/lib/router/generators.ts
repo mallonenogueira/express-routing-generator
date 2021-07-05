@@ -1,37 +1,35 @@
-import { Handlers, Methods, IRequest, IRoute } from "..";
+import { Middleware, Methods, IRequest, IRoute } from "..";
 
-function Method(method: Methods, path: string, ...handlers: Handlers[]) {
-  return function (
-    _target: any,
-    _propertyName: string,
-    _descriptor: PropertyDescriptor
-  ) {
+const requestGenerator =
+  (method: Methods) =>
+  (path: string, ...middlewares: Middleware[]) =>
+  (_target: any, _propertyName: string, _descriptor: PropertyDescriptor) => {
     const data: IRequest = {
       method,
       path,
       property: _propertyName,
-      handlers,
+      middlewares,
     };
 
     Reflect.defineMetadata(`method:${method}:${path}`, data, _target);
   };
-}
 
-export function Get(path: string, ...handlers: Handlers[]) {
-  return Method("get", path, ...handlers);
-}
+export const All = requestGenerator("all");
+export const Get = requestGenerator("get");
+export const Post = requestGenerator("post");
+export const Put = requestGenerator("put");
+export const Delete = requestGenerator("delete");
+export const Patch = requestGenerator("patch");
+export const Options = requestGenerator("options");
+export const Head = requestGenerator("head");
 
-export function Post(path: string, ...handlers: Handlers[]) {
-  return Method("post", path, ...handlers);
-}
-
-export function Route(path: string, ...handlers: Handlers[]): ClassDecorator {
-  return (target) => {
+export const Route =
+  (path: string, ...middlewares: Middleware[]): ClassDecorator =>
+  (target) => {
     const data: IRoute = {
       path,
-      handlers,
+      middlewares,
     };
 
     Reflect.defineMetadata("route", data, target.prototype);
   };
-}

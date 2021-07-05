@@ -1,7 +1,6 @@
 import { NextFunction, Router, Request, Response } from "express";
-import { IController } from "../../types";
-import { IRequest } from "../../router/types";
-import { IInject, InjectEnum } from "../types";
+import { IInject, IController, IRequest } from "../..";
+import { InjectEnum } from "../types";
 
 type HandleContainer = (req: Request, res: Response, value: any) => any;
 
@@ -89,6 +88,6 @@ export const injectToControllerRouter =
   (router: Router, controller: IController, request: IRequest) =>
     router[request.method](
       request.path,
-      ...request.handlers,
+      ...request.middlewares,
       new RequestHandler(controller, request, resolveInjection).handler
     );

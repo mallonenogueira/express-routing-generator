@@ -1,12 +1,10 @@
 import "reflect-metadata";
 import express, { json, NextFunction, Request, Response } from "express";
 
-import { createRoutes } from "./lib";
 import { UserController } from "./user-controller";
 import { DIController } from "./di-controller";
 import { container } from "tsyringe";
-import { IController } from "./lib/types";
-import { injectToControllerRouter } from "./lib/di/handlers/inject-to-controller-router";
+import { createRoutes, injectToControllerRouter } from "./lib";
 
 const app = express();
 
@@ -34,11 +32,12 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 app.use(
   createRoutes({
     controllers: [DIController],
-    addToControllerRouter: injectToControllerRouter((_req, res, value) =>
-      res.locals.container.resolve(value)
-    ),
-    createController: (controller) =>
-      container.resolve(controller as IController),
+    addToControllerRouter: injectToControllerRouter((_req, res, value) => {
+      return res.locals.container.resolve(value);
+    }),
+    resolveController: (controller) => {
+      return container.resolve(controller as { new (): any });
+    },
   })
 );
 
