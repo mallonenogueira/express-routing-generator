@@ -1,3 +1,3 @@
-export * from "./router/types";
+export * from "./core/types";
 export * from "./di";
-export * from "./router";
+export * from "./core";
