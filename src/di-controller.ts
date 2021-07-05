@@ -13,22 +13,15 @@ class Service {
 @injectable()
 export class DIController {
   @Get("/")
-  findAll(
-    @inject("Response") res: Response,
-    @inject(Service) service: Service
-  ) {
+  findAll(@Res res: Response, @inject(Service) service: Service) {
     res.json(service.getData());
   }
 
-  @Get("/:id")
-  findOne(@Res res: Response, @Param("id") id: string) {
+  @Post("/:id")
+  save(@Res res: Response, @Param("id") id: string, @Body body: any) {
     res.json({
       id,
+      body,
     });
-  }
-
-  @Post("/")
-  save(@Res res: Response, @Body body: any) {
-    res.json(body);
   }
 }
