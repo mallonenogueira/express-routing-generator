@@ -79,7 +79,7 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 app.use(
   createRoutes({
     controllers: [DIController],
-    addToControllerRouter: injectToControllerRouter,
+    addToControllerRouter: injectToControllerRouter((_req, res, value) => res.locals.container.resolve(value)),
     createController: (controller) =>
       container.resolve(controller as IController),
   })
