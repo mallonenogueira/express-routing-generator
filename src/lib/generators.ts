@@ -47,7 +47,7 @@ export function Route(path: string, ...handlers: Handlers[]): ClassDecorator {
 export function inject(value: InjectionToken): any {
   return function (target: Object, key: string, index: number) {
     Reflect.defineMetadata(
-      `inject:${key}:${index}`,
+      `inject:${index}`,
       { index, value, propertyKey: key } as IInject,
       target,
       key

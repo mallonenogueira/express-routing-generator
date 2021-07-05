@@ -1,8 +1,6 @@
 import { Response } from "express";
-import { injectable } from "tsyringe";
-import { Get, inject, Route, Res, Param, Body, Post } from "./lib";
+import { Get, Route, Res, Param, Body, Post, inject } from "./lib";
 
-@injectable()
 class Service {
   getData() {
     return [{ name: "dependencyInjection" }];
@@ -10,11 +8,15 @@ class Service {
 }
 
 @Route("/di")
-@injectable()
 export class DIController {
   @Get("/")
-  findAll(@Res res: Response, @inject(Service) service: Service) {
+  findAll(@Res res: Response, service: Service) {
     res.json(service.getData());
+  }
+
+  @Get("/test-inject-string")
+  inject(@Res res: Response, @inject("user") user: any) {
+    res.json(user);
   }
 
   @Post("/:id")

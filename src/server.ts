@@ -30,6 +30,14 @@ app.use(
 app.use((_req: Request, res: Response, next: NextFunction) => {
   res.locals.container = container.createChildContainer();
 
+  res.locals.container.register("user", {
+    useValue: {
+      id: "1a2b3c",
+      name: "Naruto",
+      token: "123456789",
+    },
+  });
+
   next();
 });
 
