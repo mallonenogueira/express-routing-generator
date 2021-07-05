@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { InjectionToken } from "tsyringe";
 
 export type Methods = "get" | "post";
+export type InjectionToken = any;
 
 export type Handlers = <T>(
   req: Request,
@@ -28,6 +28,13 @@ export interface IController {
 
 export interface IInject {
   index: number;
-  value: InjectionToken<any>;
+  value: InjectionToken;
   propertyKey: string;
+}
+
+export enum InjectEnum {
+  REQUEST = "Request",
+  RESPONSE = "Response",
+  NEXT = "Next",
+  REQUEST_PARAM = "RequestParam:",
 }

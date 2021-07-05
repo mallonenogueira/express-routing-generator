@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import express, { NextFunction, Request, Response } from "express";
+import express, { json, NextFunction, Request, Response } from "express";
 
 import { createRoutes } from "./lib";
 import { UserController } from "./user-controller";
@@ -11,6 +11,8 @@ import { IController } from "./lib/types";
 import { injectToControllerRouter } from "./lib/handlers/inject-to-controller-router";
 
 const app = express();
+
+app.use(json());
 
 app.use(
   createRoutes({
@@ -34,7 +36,9 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 app.use(
   createRoutes({
     controllers: [DIController],
-    addToControllerRouter: injectToControllerRouter,
+    addToControllerRouter: injectToControllerRouter((_req, res, value) =>
+      res.locals.container.resolve(value)
+    ),
     createController: (controller) =>
       container.resolve(controller as IController),
   })
