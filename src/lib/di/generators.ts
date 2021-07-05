@@ -1,4 +1,4 @@
-import { IInject, InjectEnum, InjectionToken } from "./types";
+import { IInject, INJECT, InjectionToken } from "./types";
 
 export const inject =
   (value: InjectionToken): any =>
@@ -10,13 +10,13 @@ export const inject =
       key
     );
 
-export const Req = inject(InjectEnum.REQUEST);
+export const Req = inject(INJECT.Request);
 
-export const Res = inject(InjectEnum.RESPONSE);
+export const Res = inject(INJECT.Response);
 
-export const Next = inject(InjectEnum.NEXT);
+export const Next = inject(INJECT.Next);
 
 export const Param = (param: string) =>
-  inject(`${InjectEnum.REQUEST_PARAM}params:${param}`);
+  inject(`${INJECT.RequestParam}params:${param}`);
 
-export const Body = inject(`${InjectEnum.REQUEST_PARAM}body`);
+export const Body = inject(`${INJECT.RequestParam}body`);

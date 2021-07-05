@@ -1,10 +1,10 @@
 import { NextFunction, Router, Request, Response } from "express";
 import { IInject, IController, IRequest } from "../..";
-import { InjectEnum } from "../types";
+import { INJECT } from "../types";
 
 type HandleContainer = (req: Request, res: Response, value: any) => any;
 
-const PARAMS = `${InjectEnum.REQUEST_PARAM}params:`;
+const PARAMS = `${INJECT.RequestParam}params:`;
 
 type InjectMap = {
   paramType: any;
@@ -45,12 +45,12 @@ class RequestHandler {
       if (stringValue && stringValue.startsWith(PARAMS))
         return req.params[stringValue.replace(PARAMS, "")];
 
-      if (stringValue && stringValue.startsWith(InjectEnum.REQUEST_PARAM))
-        return (req as any)[stringValue.replace(InjectEnum.REQUEST_PARAM, "")];
+      if (stringValue && stringValue.startsWith(INJECT.RequestParam))
+        return (req as any)[stringValue.replace(INJECT.RequestParam, "")];
 
-      if (stringValue === InjectEnum.NEXT) return next;
-      if (stringValue === InjectEnum.RESPONSE) return res;
-      if (stringValue === InjectEnum.REQUEST) return req;
+      if (stringValue === INJECT.Next) return next;
+      if (stringValue === INJECT.Response) return res;
+      if (stringValue === INJECT.Request) return req;
 
       return resolveInjection(req, res, value);
     };

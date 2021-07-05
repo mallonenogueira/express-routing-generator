@@ -6,9 +6,9 @@ export interface IInject {
   propertyKey: string;
 }
 
-export enum InjectEnum {
-  REQUEST = "Request",
-  RESPONSE = "Response",
-  NEXT = "Next",
-  REQUEST_PARAM = "RequestParam:",
+export enum INJECT {
+  Request = "Request",
+  Response = "Response",
+  Next = "Next",
+  RequestParam = "RequestParam:",
 }
